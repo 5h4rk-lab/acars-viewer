@@ -309,20 +309,14 @@ function altColor(alt) {
   return '#ff6b35';
 }
 
-function planeIcon(color, callsign) {
-  return L.divIcon({
-    html:`<div style="background:rgba(10,14,20,0.9);color:${color};font-family:monospace;font-size:10px;font-weight:bold;padding:2px 6px;border:1px solid ${color};white-space:nowrap">${callsign}</div>`,
-    className:'', iconAnchor:[0,0]
-  });
-}
-
 function airplaneIcon(color, hdg) {
+  const safeColor = /^#[0-9a-fA-F]{3,8}$/.test(color) ? color : '#00d4ff';
   return L.divIcon({
     html: `<div style="transform:rotate(${hdg||0}deg);width:38px;height:38px;display:flex;align-items:center;justify-content:center">
       <svg width="38" height="38" viewBox="0 0 38 38">
-        <rect x="17" y="6" width="4" height="26" rx="2" fill="${color}"/>
-        <path d="M19 16 L4 24 L4 22 L19 14 L34 22 L34 24 Z" fill="${color}"/>
-        <path d="M19 28 L12 34 L12 32 L19 26 L26 32 L26 34 Z" fill="${color}"/>
+        <rect x="17" y="6" width="4" height="26" rx="2" fill="${safeColor}"/>
+        <path d="M19 16 L4 24 L4 22 L19 14 L34 22 L34 24 Z" fill="${safeColor}"/>
+        <path d="M19 28 L12 34 L12 32 L19 26 L26 32 L26 34 Z" fill="${safeColor}"/>
       </svg>
     </div>`,
     className: '',
@@ -364,7 +358,7 @@ function renderMap(key) {
       <b style="color:${color}">${f.flight} · ${p.ts.split(' ')[1]||''}</b><br>
       ${p.alt?`Alt: <b>${p.alt.toLocaleString()} ft</b><br>`:''}
       ${p.tas?`Speed: ${p.tas} kts<br>`:''}
-      ${p.hdg?`Heading: ${p.hdg}°<br>`:''}
+      ${p.hdg != null?`Heading: ${p.hdg}°<br>`:''}
       ${p.fob?`Fuel: ${p.fob.toLocaleString()} lbs<br>`:''}
       ${p.eta?`ETA: ${p.eta} UTC<br>`:''}
       <span style="color:#4a6080;font-size:9px">✅ CONFIRMED by your SDR</span>
