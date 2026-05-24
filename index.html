@@ -590,7 +590,7 @@ function drawChart(f) {
   const ctx = canvas.getContext('2d');
 
   const pts = f.pos.map(p => ({
-    t: new Date(p.ts.replace(/\//g, '-').replace(' ', 'T')).getTime(),
+    t: (m => m ? (+m[1])*3600 + (+m[2])*60 + (+m[3]) : NaN)(p.ts.match(/(\d{2}):(\d{2}):(\d{2})/)),
     alt: p.alt, tas: p.tas, fob: p.fob
   })).filter(p => !isNaN(p.t));
 
@@ -700,7 +700,7 @@ function drawChart(f) {
   }
 
   // X-axis time labels
-  const fmt = t => new Date(t).toISOString().slice(11, 16);
+  const fmt = t => `${String(Math.floor(t/3600)).padStart(2,'0')}:${String(Math.floor((t%3600)/60)).padStart(2,'0')}`;
   ctx.fillStyle = '#4a6080';
   ctx.font = '8px monospace';
   ctx.textAlign = 'center';
