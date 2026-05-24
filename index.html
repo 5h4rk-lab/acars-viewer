@@ -309,6 +309,14 @@ function altColor(alt) {
   return '#ff6b35';
 }
 
+function trackBearing(p1, p2) {
+  const toRad = d => d * Math.PI / 180;
+  const y = Math.sin(toRad(p2.lon - p1.lon)) * Math.cos(toRad(p2.lat));
+  const x = Math.cos(toRad(p1.lat)) * Math.sin(toRad(p2.lat)) -
+             Math.sin(toRad(p1.lat)) * Math.cos(toRad(p2.lat)) * Math.cos(toRad(p2.lon - p1.lon));
+  return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+}
+
 function airplaneIcon(color, hdg) {
   const safeColor = /^#[0-9a-fA-F]{3,8}$/.test(color) ? color : '#00d4ff';
   return L.divIcon({
@@ -364,8 +372,9 @@ function renderMap(key) {
       <span style="color:#4a6080;font-size:9px">✅ CONFIRMED by your SDR</span>
     </div>`;
     let m;
-    if (isLast && p.hdg != null) {
-      m=L.marker([p.lat,p.lon],{icon:airplaneIcon(color,p.hdg)})
+    if (isLast) {
+      const hdg = p.hdg != null ? p.hdg : (f.pos.length >= 2 ? trackBearing(f.pos[f.pos.length-2], p) : 0);
+      m=L.marker([p.lat,p.lon],{icon:airplaneIcon(color,hdg)})
         .bindPopup(popup,{className:'dark-popup'}).addTo(map);
     } else {
       m=L.circleMarker([p.lat,p.lon],{radius:r,color,fillColor:color,fillOpacity:1,weight:2})
@@ -430,8 +439,9 @@ function renderAllMap() {
       const isLast=i===coords.length-1;
       const p=f.pos[i];
       const popup=`<div style="font-family:monospace;font-size:11px;background:#0d1117;color:#c8d8e8;padding:6px"><b style="color:${color}">${f.flight}</b><br>${f.route||''}<br>Alt: ${p.alt?p.alt.toLocaleString()+' ft':'N/A'}</div>`;
-      if (isLast && p.hdg != null) {
-        L.marker(c,{icon:airplaneIcon(color,p.hdg)})
+      if (isLast) {
+        const hdg = p.hdg != null ? p.hdg : (f.pos.length >= 2 ? trackBearing(f.pos[f.pos.length-2], p) : 0);
+        L.marker(c,{icon:airplaneIcon(color,hdg)})
           .bindPopup(popup,{className:'dark-popup'}).addTo(map);
       } else {
         L.circleMarker(c,{radius:isLast?7:4,color,fillColor:color,fillOpacity:1,weight:2})
