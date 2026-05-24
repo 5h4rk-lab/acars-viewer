@@ -1,0 +1,80 @@
+<h2>Where should the altitude chart live?</h2>
+<p class="subtitle">The chart shows altitude (and optionally speed) over time for the selected flight.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;flex-direction:column;gap:4px;padding:12px;background:#0d1117;border:1px solid #1a2332;font-family:monospace;font-size:10px;color:#4a6080">
+        <div style="background:#1a2332;padding:4px 8px;color:#c8d8e8;font-size:9px;letter-spacing:1px">TIMELINE TAB</div>
+        <div style="background:#080c10;border-left:2px solid #39ff14;padding:6px;color:#39ff14;font-size:9px">● 14:23 Position report — 35,000 ft</div>
+        <div style="background:#080c10;border-left:2px solid #4a6080;padding:6px;color:#c8d8e8;font-size:9px">● 14:31 FMC message</div>
+        <div style="background:#080c10;border-left:2px solid #39ff14;padding:6px;color:#39ff14;font-size:9px">● 14:45 Position report — 36,000 ft</div>
+        <div style="border:1px solid #1a2332;margin-top:6px;padding:6px;background:#0a0e14">
+          <div style="font-size:9px;color:#4a6080;margin-bottom:4px;letter-spacing:1px">ALTITUDE PROFILE</div>
+          <svg width="100%" height="50" viewBox="0 0 260 50">
+            <polyline points="10,45 40,30 80,15 120,10 160,10 200,20 240,45" fill="none" stroke="#00d4ff" stroke-width="2"/>
+            <polyline points="10,45 40,30 80,15 120,10 160,10 200,20 240,45" fill="rgba(0,212,255,0.1)" stroke="none"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Inside Timeline Tab</h3>
+      <p>Chart appears at the top of the Timeline tab, above the event list. Compact, contextual, no extra space needed.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;flex-direction:column;gap:4px;padding:12px;background:#0d1117;border:1px solid #1a2332;font-family:monospace;font-size:10px;color:#4a6080">
+        <div style="display:flex;gap:4px;border-bottom:1px solid #1a2332;padding-bottom:4px">
+          <span style="color:#00d4ff;border-bottom:2px solid #00d4ff;padding:2px 6px;font-size:9px">INFO</span>
+          <span style="padding:2px 6px;font-size:9px">DECODED</span>
+          <span style="padding:2px 6px;font-size:9px">TIMELINE</span>
+          <span style="padding:2px 6px;font-size:9px">RAW</span>
+          <span style="color:#7b68ee;border-bottom:2px solid #7b68ee;padding:2px 6px;font-size:9px">CHART ✦</span>
+        </div>
+        <div style="padding:8px;background:#0a0e14">
+          <div style="font-size:9px;color:#4a6080;margin-bottom:6px;letter-spacing:1px">ALTITUDE &amp; SPEED PROFILE</div>
+          <svg width="100%" height="70" viewBox="0 0 260 70">
+            <polyline points="10,65 40,45 80,20 120,12 160,12 200,28 240,65" fill="none" stroke="#00d4ff" stroke-width="2"/>
+            <polyline points="10,65 40,45 80,20 120,12 160,12 200,28 240,65" fill="rgba(0,212,255,0.08)" stroke="none"/>
+            <polyline points="10,55 40,50 80,42 120,40 160,40 200,45 240,55" fill="none" stroke="#39ff14" stroke-width="1.5" stroke-dasharray="4,2"/>
+            <text x="10" y="10" fill="#4a6080" font-size="8">FL360</text>
+            <text x="220" y="68" fill="#4a6080" font-size="8">14:52</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Dedicated Chart Tab</h3>
+      <p>5th tab "Chart" in the detail panel. Full panel height for the chart. Clean separation from timeline events.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;flex-direction:column;gap:4px;padding:12px;background:#0d1117;border:1px solid #1a2332;font-family:monospace;font-size:10px;color:#4a6080">
+        <div style="position:relative">
+          <div style="background:#0a0e14;height:80px;border:1px solid #1a2332;display:flex;align-items:center;justify-content:center;color:#4a6080;font-size:9px">
+            MAP AREA
+          </div>
+          <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(10,14,20,0.92);border-top:1px solid #1a2332;padding:4px 8px">
+            <div style="font-size:8px;color:#4a6080;letter-spacing:1px;margin-bottom:2px">ALTITUDE PROFILE — UAL234</div>
+            <svg width="100%" height="28" viewBox="0 0 260 28">
+              <polyline points="10,26 40,18 80,8 120,5 160,5 200,12 240,26" fill="none" stroke="#7b68ee" stroke-width="1.5"/>
+              <polyline points="10,26 40,18 80,8 120,5 160,5 200,12 240,26" fill="rgba(123,104,238,0.12)" stroke="none"/>
+            </svg>
+          </div>
+        </div>
+        <div style="font-size:9px;color:#4a6080;text-align:center;margin-top:4px">overlaid on map bottom edge</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Map Overlay Strip</h3>
+      <p>Slim chart strip pinned to the bottom of the map. Always visible when a flight is selected. Dramatic, aviation-dashboard feel.</p>
+    </div>
+  </div>
+
+</div>

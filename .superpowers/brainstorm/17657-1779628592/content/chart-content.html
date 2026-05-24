@@ -1,0 +1,125 @@
+<h2>What should the Chart tab show?</h2>
+<p class="subtitle">You already parse altitude, speed (TAS), fuel (FOB), and Mach from position messages.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="padding:12px;background:#0a0e14;border:1px solid #1a2332;font-family:monospace">
+        <div style="font-size:8px;color:#4a6080;letter-spacing:1px;margin-bottom:6px">ALTITUDE PROFILE</div>
+        <svg width="100%" height="80" viewBox="0 0 260 80">
+          <defs>
+            <linearGradient id="altGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid lines -->
+          <line x1="0" y1="20" x2="260" y2="20" stroke="#1a2332" stroke-width="0.5"/>
+          <line x1="0" y1="40" x2="260" y2="40" stroke="#1a2332" stroke-width="0.5"/>
+          <line x1="0" y1="60" x2="260" y2="60" stroke="#1a2332" stroke-width="0.5"/>
+          <!-- Alt labels -->
+          <text x="2" y="19" fill="#4a6080" font-size="7">FL360</text>
+          <text x="2" y="39" fill="#4a6080" font-size="7">FL240</text>
+          <text x="2" y="59" fill="#4a6080" font-size="7">FL120</text>
+          <!-- Area fill -->
+          <path d="M30,75 L60,55 L90,28 L120,18 L150,18 L180,28 L210,55 L240,75 Z" fill="url(#altGrad)"/>
+          <!-- Line -->
+          <polyline points="30,75 60,55 90,28 120,18 150,18 180,28 210,55 240,75" fill="none" stroke="#00d4ff" stroke-width="2"/>
+          <!-- Dots -->
+          <circle cx="120" cy="18" r="3" fill="#00d4ff"/>
+          <circle cx="150" cy="18" r="3" fill="#00d4ff"/>
+        </svg>
+        <div style="display:flex;justify-content:space-between;font-size:7px;color:#4a6080;margin-top:2px">
+          <span>14:10</span><span>14:25</span><span>14:40</span><span>14:55</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Altitude Only</h3>
+      <p>Clean area chart, altitude over time. FL labels on Y-axis. Simple, always has data.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="padding:12px;background:#0a0e14;border:1px solid #1a2332;font-family:monospace">
+        <div style="font-size:8px;color:#4a6080;letter-spacing:1px;margin-bottom:6px">ALTITUDE &amp; SPEED</div>
+        <svg width="100%" height="80" viewBox="0 0 260 80">
+          <defs>
+            <linearGradient id="altGrad2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="20" x2="260" y2="20" stroke="#1a2332" stroke-width="0.5"/>
+          <line x1="0" y1="40" x2="260" y2="40" stroke="#1a2332" stroke-width="0.5"/>
+          <line x1="0" y1="60" x2="260" y2="60" stroke="#1a2332" stroke-width="0.5"/>
+          <!-- Alt labels left -->
+          <text x="2" y="19" fill="#00d4ff" font-size="7">FL360</text>
+          <text x="2" y="39" fill="#00d4ff" font-size="7">FL240</text>
+          <!-- Speed labels right -->
+          <text x="230" y="19" fill="#39ff14" font-size="7">500kt</text>
+          <text x="230" y="39" fill="#39ff14" font-size="7">400kt</text>
+          <!-- Alt area -->
+          <path d="M30,75 L60,55 L90,28 L120,18 L150,18 L180,28 L210,55 L240,75 Z" fill="url(#altGrad2)"/>
+          <polyline points="30,75 60,55 90,28 120,18 150,18 180,28 210,55 240,75" fill="none" stroke="#00d4ff" stroke-width="2"/>
+          <!-- Speed line -->
+          <polyline points="30,65 60,50 90,38 120,35 150,35 180,40 210,52 240,65" fill="none" stroke="#39ff14" stroke-width="1.5" stroke-dasharray="5,2"/>
+          <!-- Legend -->
+          <rect x="90" y="4" width="8" height="2" fill="#00d4ff"/>
+          <text x="101" y="8" fill="#00d4ff" font-size="7">Altitude</text>
+          <line x1="140" y1="5" x2="148" y2="5" stroke="#39ff14" stroke-width="1.5" stroke-dasharray="3,1"/>
+          <text x="152" y="8" fill="#39ff14" font-size="7">Speed</text>
+        </svg>
+        <div style="display:flex;justify-content:space-between;font-size:7px;color:#4a6080;margin-top:2px">
+          <span>14:10</span><span>14:25</span><span>14:40</span><span>14:55</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Altitude + Speed (dual axis)</h3>
+      <p>Altitude area + dashed speed overlay. Two Y-axes. More data, still readable. Speed data may not always be present.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="padding:12px;background:#0a0e14;border:1px solid #1a2332;font-family:monospace">
+        <div style="font-size:8px;color:#4a6080;letter-spacing:1px;margin-bottom:4px">ALTITUDE + SPEED + FUEL</div>
+        <svg width="100%" height="68" viewBox="0 0 260 68">
+          <line x1="0" y1="22" x2="260" y2="22" stroke="#1a2332" stroke-width="0.5"/>
+          <line x1="0" y1="44" x2="260" y2="44" stroke="#1a2332" stroke-width="0.5"/>
+          <defs>
+            <linearGradient id="altGrad3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7b68ee" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#7b68ee" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- Alt -->
+          <path d="M30,64 L70,42 L110,22 L150,16 L190,22 L230,64 Z" fill="url(#altGrad3)"/>
+          <polyline points="30,64 70,42 110,22 150,16 190,22 230,64" fill="none" stroke="#7b68ee" stroke-width="1.5"/>
+          <!-- Speed -->
+          <polyline points="30,56 70,46 110,36 150,33 190,38 230,56" fill="none" stroke="#00d4ff" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <!-- Fuel (decreasing) -->
+          <polyline points="30,20 70,25 110,32 150,38 190,46 230,58" fill="none" stroke="#ffcc00" stroke-width="1.5" stroke-dasharray="2,3"/>
+          <!-- Legend -->
+          <rect x="10" y="4" width="6" height="2" fill="#7b68ee"/>
+          <text x="19" y="8" fill="#7b68ee" font-size="6">Alt</text>
+          <line x1="40" y1="5" x2="46" y2="5" stroke="#00d4ff" stroke-width="1.5" stroke-dasharray="3,1"/>
+          <text x="49" y="8" fill="#00d4ff" font-size="6">Speed</text>
+          <line x1="82" y1="5" x2="88" y2="5" stroke="#ffcc00" stroke-width="1.5" stroke-dasharray="2,2"/>
+          <text x="91" y="8" fill="#ffcc00" font-size="6">Fuel</text>
+        </svg>
+        <div style="display:flex;justify-content:space-between;font-size:7px;color:#4a6080;margin-top:2px">
+          <span>14:10</span><span>14:25</span><span>14:40</span><span>14:55</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Altitude + Speed + Fuel</h3>
+      <p>All 3 metrics on one chart. Maximum data. Fuel line visually descends as flight progresses. Dense but impressive.</p>
+    </div>
+  </div>
+
+</div>

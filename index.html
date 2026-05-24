@@ -565,7 +565,7 @@ function drawChart(f) {
   const ctx = canvas.getContext('2d');
 
   const pts = f.pos.map(p => ({
-    t: new Date(p.ts.replace(/\//g, '-')).getTime(),
+    t: new Date(p.ts.replace(/\//g, '-').replace(' ', 'T')).getTime(),
     alt: p.alt, tas: p.tas, fob: p.fob
   })).filter(p => !isNaN(p.t));
 
@@ -593,7 +593,7 @@ function drawChart(f) {
 
   // Grid
   ctx.lineWidth = 0.5;
-  [0.25, 0.5, 0.75].forEach(frac => {
+  [0.25, 0.5, 0.75, 1].forEach(frac => {
     ctx.strokeStyle = '#1a2332';
     ctx.setLineDash([]);
     ctx.beginPath();
@@ -649,12 +649,14 @@ function drawChart(f) {
   ctx.setLineDash([]);
 
   // Left Y-axis labels (altitude in FL)
-  ctx.font = '9px monospace';
-  ctx.textAlign = 'right';
-  [0.25, 0.5, 0.75, 1].forEach(frac => {
-    ctx.fillStyle = '#7b68ee';
-    ctx.fillText('FL' + Math.round(altMax * frac / 100), PAD.left - 4, PAD.top + cH * (1 - frac) + 3);
-  });
+  if (alts.length) {
+    ctx.font = '9px monospace';
+    ctx.textAlign = 'right';
+    [0.25, 0.5, 0.75, 1].forEach(frac => {
+      ctx.fillStyle = '#7b68ee';
+      ctx.fillText('FL' + Math.round(altMax * frac / 100), PAD.left - 4, PAD.top + cH * (1 - frac) + 3);
+    });
+  }
 
   // Right Y-axis labels (speed in kts)
   if (tases.length) {
