@@ -116,11 +116,13 @@ html, body { height:100vh; overflow:hidden; background:#0a0e14; color:#c8d8e8; f
     <div class="dtab" data-tab="decoded">Decoded</div>
     <div class="dtab" data-tab="timeline">Timeline</div>
     <div class="dtab" data-tab="raw">Raw</div>
+    <div class="dtab" data-tab="chart">Chart</div>
   </div>
   <div class="tab-pane active" id="tab-info"><div class="empty">SELECT A FLIGHT</div></div>
   <div class="tab-pane" id="tab-decoded"><div class="empty">SELECT A FLIGHT</div></div>
   <div class="tab-pane" id="tab-timeline"><div class="empty">SELECT A FLIGHT</div></div>
   <div class="tab-pane" id="tab-raw"><div class="empty">SELECT A FLIGHT</div></div>
+  <div class="tab-pane" id="tab-chart"><div class="empty">SELECT A FLIGHT</div></div>
 </div>
 
 <script>
@@ -604,7 +606,7 @@ function clearAll() {
   document.getElementById('btn-all').textContent='Show All';
   document.getElementById('btn-all').classList.remove('active');
   document.getElementById('file-input').value='';
-  ['tab-info','tab-decoded','tab-timeline','tab-raw'].forEach(id=>document.getElementById(id).innerHTML='<div class="empty">SELECT A FLIGHT</div>');
+  ['tab-info','tab-decoded','tab-timeline','tab-raw','tab-chart'].forEach(id=>document.getElementById(id).innerHTML='<div class="empty">SELECT A FLIGHT</div>');
 }
 
 // ── TABS ──────────────────────────────────────────────────────────
