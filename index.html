@@ -493,6 +493,9 @@ function renderDetail(key) {
       <div class="msg-body">${(m.body||'').trim().slice(0,300)}</div>
     </div>`).join('');
   document.getElementById('tab-raw').innerHTML = raw||'<div class="empty">NO MESSAGES</div>';
+
+  // CHART TAB
+  drawChart(f);
 }
 
 function decodeMsg(m) {
@@ -763,6 +766,7 @@ document.querySelectorAll('.dtab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab-pane').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');
   document.getElementById('tab-'+tab).classList.add('active');
+  if (tab==='chart' && selected) drawChart(flights[selected]);
 }));
 
 // ── INIT ──────────────────────────────────────────────────────────
