@@ -583,7 +583,7 @@ function drawChart(f) {
   }
   container.innerHTML = '<canvas id="chart-canvas" style="display:block"></canvas>';
   const canvas = document.getElementById('chart-canvas');
-  const W = document.getElementById('detail').clientWidth || 320;
+  const W = Math.max(document.getElementById('detail').clientWidth || 320, 280);
   const H = 220;
   canvas.width = W;
   canvas.height = H;
@@ -690,6 +690,13 @@ function drawChart(f) {
     [0.5, 1].forEach(frac => {
       ctx.fillText(Math.round(speedMax * frac) + 'kt', PAD.left + cW + 4, PAD.top + cH * (1 - frac) + 3);
     });
+  }
+
+  // Right Y-axis fuel label
+  if (fobs.length) {
+    ctx.fillStyle = '#ffcc00';
+    ctx.textAlign = 'left';
+    ctx.fillText(Math.round(fobMax).toLocaleString() + 'lb', PAD.left + cW + 4, PAD.top + 3);
   }
 
   // X-axis time labels
