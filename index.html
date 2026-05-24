@@ -549,6 +549,151 @@ function labelDesc(l) {
   return d[l]||'Datalink message';
 }
 
+// ── CHART ─────────────────────────────────────────────────────────
+function drawChart(f) {
+  const container = document.getElementById('tab-chart');
+  if (!f.pos.length) {
+    container.innerHTML = '<div class="empty">NO POSITION DATA</div>';
+    return;
+  }
+  container.innerHTML = '<canvas id="chart-canvas" style="display:block"></canvas>';
+  const canvas = document.getElementById('chart-canvas');
+  const W = document.getElementById('detail').clientWidth || 320;
+  const H = 220;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const pts = f.pos.map(p => ({
+    t: new Date(p.ts.replace(/\//g, '-')).getTime(),
+    alt: p.alt, tas: p.tas, fob: p.fob
+  })).filter(p => !isNaN(p.t));
+
+  if (!pts.length) { container.innerHTML = '<div class="empty">NO POSITION DATA</div>'; return; }
+
+  const PAD = { top: 28, right: 58, bottom: 22, left: 48 };
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top - PAD.bottom;
+
+  const tMin = pts[0].t, tMax = pts[pts.length - 1].t;
+  const tRange = tMax - tMin || 1;
+
+  const alts  = pts.map(p => p.alt).filter(v => v != null);
+  const tases = pts.map(p => p.tas).filter(v => v != null);
+  const fobs  = pts.map(p => p.fob).filter(v => v != null);
+
+  const altMax   = alts.length  ? Math.max(...alts)  * 1.1 : 40000;
+  const speedMax = tases.length ? Math.max(...tases) * 1.1 : 600;
+  const fobMax   = fobs.length  ? Math.max(...fobs)  * 1.1 : 100000;
+
+  const xOf  = t => PAD.left + (t - tMin) / tRange * cW;
+  const yAlt = v => PAD.top + cH - (v / altMax)   * cH;
+  const ySpd = v => PAD.top + cH - (v / speedMax) * cH;
+  const yFob = v => PAD.top + cH - (v / fobMax)   * cH;
+
+  // Grid
+  ctx.lineWidth = 0.5;
+  [0.25, 0.5, 0.75].forEach(frac => {
+    ctx.strokeStyle = '#1a2332';
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(PAD.left, PAD.top + cH * (1 - frac));
+    ctx.lineTo(PAD.left + cW, PAD.top + cH * (1 - frac));
+    ctx.stroke();
+  });
+
+  // Altitude filled area
+  if (alts.length) {
+    const ap = pts.filter(p => p.alt != null);
+    ctx.beginPath();
+    ctx.moveTo(xOf(ap[0].t), yAlt(ap[0].alt));
+    ap.forEach(p => ctx.lineTo(xOf(p.t), yAlt(p.alt)));
+    ctx.lineTo(xOf(ap[ap.length - 1].t), PAD.top + cH);
+    ctx.lineTo(xOf(ap[0].t), PAD.top + cH);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(123,104,238,0.12)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(xOf(ap[0].t), yAlt(ap[0].alt));
+    ap.forEach(p => ctx.lineTo(xOf(p.t), yAlt(p.alt)));
+    ctx.strokeStyle = '#7b68ee';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    ctx.stroke();
+  }
+
+  // Speed dashed line
+  if (tases.length) {
+    const sp = pts.filter(p => p.tas != null);
+    ctx.beginPath();
+    ctx.moveTo(xOf(sp[0].t), ySpd(sp[0].tas));
+    sp.forEach(p => ctx.lineTo(xOf(p.t), ySpd(p.tas)));
+    ctx.strokeStyle = '#00d4ff';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 3]);
+    ctx.stroke();
+  }
+
+  // Fuel dashed line
+  if (fobs.length) {
+    const fp = pts.filter(p => p.fob != null);
+    ctx.beginPath();
+    ctx.moveTo(xOf(fp[0].t), yFob(fp[0].fob));
+    fp.forEach(p => ctx.lineTo(xOf(p.t), yFob(p.fob)));
+    ctx.strokeStyle = '#ffcc00';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3, 4]);
+    ctx.stroke();
+  }
+
+  ctx.setLineDash([]);
+
+  // Left Y-axis labels (altitude in FL)
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'right';
+  [0.25, 0.5, 0.75, 1].forEach(frac => {
+    ctx.fillStyle = '#7b68ee';
+    ctx.fillText('FL' + Math.round(altMax * frac / 100), PAD.left - 4, PAD.top + cH * (1 - frac) + 3);
+  });
+
+  // Right Y-axis labels (speed in kts)
+  if (tases.length) {
+    ctx.fillStyle = '#00d4ff';
+    ctx.textAlign = 'left';
+    [0.5, 1].forEach(frac => {
+      ctx.fillText(Math.round(speedMax * frac) + 'kt', PAD.left + cW + 4, PAD.top + cH * (1 - frac) + 3);
+    });
+  }
+
+  // X-axis time labels
+  const fmt = t => new Date(t).toISOString().slice(11, 16);
+  ctx.fillStyle = '#4a6080';
+  ctx.font = '8px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(fmt(tMin), PAD.left, H - 4);
+  ctx.fillText(fmt((tMin + tMax) / 2), PAD.left + cW / 2, H - 4);
+  ctx.fillText(fmt(tMax), PAD.left + cW, H - 4);
+
+  // Legend
+  let lx = PAD.left;
+  const legends = [];
+  if (alts.length)  legends.push({ color: '#7b68ee', label: 'Alt',   dash: false });
+  if (tases.length) legends.push({ color: '#00d4ff', label: 'Speed', dash: true  });
+  if (fobs.length)  legends.push({ color: '#ffcc00', label: 'Fuel',  dash: true  });
+  ctx.font = '9px monospace';
+  legends.forEach(leg => {
+    ctx.strokeStyle = leg.color;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash(leg.dash ? [4, 2] : []);
+    ctx.beginPath(); ctx.moveTo(lx, 14); ctx.lineTo(lx + 14, 14); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = leg.color;
+    ctx.textAlign = 'left';
+    ctx.fillText(leg.label, lx + 17, 18);
+    lx += 14 + ctx.measureText(leg.label).width + 18;
+  });
+}
+
 // ── STATS ─────────────────────────────────────────────────────────
 function updateStats() {
   const keys=Object.keys(flights);
