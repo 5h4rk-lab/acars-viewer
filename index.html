@@ -428,8 +428,15 @@ function renderAllMap() {
     }
     coords.forEach((c,i)=>{
       const isLast=i===coords.length-1;
-      L.circleMarker(c,{radius:isLast?7:4,color,fillColor:color,fillOpacity:1,weight:2})
-        .bindPopup(`<div style="font-family:monospace;font-size:11px;background:#0d1117;color:#c8d8e8;padding:6px"><b style="color:${color}">${f.flight}</b><br>${f.route||''}<br>Alt: ${f.pos[i].alt?f.pos[i].alt.toLocaleString()+' ft':'N/A'}</div>`,{className:'dark-popup'}).addTo(map);
+      const p=f.pos[i];
+      const popup=`<div style="font-family:monospace;font-size:11px;background:#0d1117;color:#c8d8e8;padding:6px"><b style="color:${color}">${f.flight}</b><br>${f.route||''}<br>Alt: ${p.alt?p.alt.toLocaleString()+' ft':'N/A'}</div>`;
+      if (isLast && p.hdg != null) {
+        L.marker(c,{icon:airplaneIcon(color,p.hdg)})
+          .bindPopup(popup,{className:'dark-popup'}).addTo(map);
+      } else {
+        L.circleMarker(c,{radius:isLast?7:4,color,fillColor:color,fillOpacity:1,weight:2})
+          .bindPopup(popup,{className:'dark-popup'}).addTo(map);
+      }
     });
 
     // Label at last position
